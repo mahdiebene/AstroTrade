@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Currency, Cryptocurrency, Company, NewsItem, MarketSummary } from '../types';
 import { apiService } from '../services/api';
 
-// Custom hook for managing real-time financial data
+// Custom hook for managing real-time financial data with enhanced error handling
 export const useFinancialData = () => {
   const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
@@ -12,7 +12,7 @@ export const useFinancialData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all financial data with better error handling
+  // Fetch all financial data with better error handling and mobile optimization
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -26,7 +26,7 @@ export const useFinancialData = () => {
       setNews(fallbackData.news);
       setMarketSummary(fallbackData.marketSummary);
       
-      // Then try to fetch real data with timeout
+      // Then try to fetch real data with timeout and better error handling
       const fetchPromises = [
         apiService.fetchCurrencies().catch(() => ({ data: fallbackData.currencies, error: 'Currency API unavailable' })),
         apiService.fetchCryptocurrencies().catch(() => ({ data: fallbackData.cryptocurrencies, error: 'Crypto API unavailable' })),
@@ -34,9 +34,9 @@ export const useFinancialData = () => {
         apiService.fetchNews().catch(() => ({ data: fallbackData.news, error: 'News API unavailable' })),
       ];
 
-      // Set a reasonable timeout for all API calls
+      // Set a reasonable timeout for all API calls (reduced for mobile)
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('API timeout')), 8000)
+        setTimeout(() => reject(new Error('API timeout')), 6000)
       );
 
       try {
@@ -124,8 +124,8 @@ export const useFinancialData = () => {
   useEffect(() => {
     fetchData();
     
-    // Set up auto-refresh every 3 minutes for real-time updates
-    const interval = setInterval(fetchData, 180000); // 3 minutes
+    // Set up auto-refresh every 5 minutes for real-time updates (increased interval for mobile)
+    const interval = setInterval(fetchData, 300000); // 5 minutes
     
     return () => clearInterval(interval);
   }, []);

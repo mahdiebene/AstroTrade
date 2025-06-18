@@ -34,27 +34,33 @@ const Home: React.FC = () => {
   const topCrypto = cryptocurrencies.sort((a, b) => b.changePercent24h - a.changePercent24h)[0];
   const topStock = companies.sort((a, b) => b.changePercent - a.changePercent)[0];
 
+  const formatMarketCap = (value: number) => {
+    if (value >= 1e12) return `$${(value / 1e12).toFixed(1)}T`;
+    if (value >= 1e9) return `$${(value / 1e9).toFixed(1)}B`;
+    return `$${(value / 1e6).toFixed(1)}M`;
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Hero Section */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">
+      <div className="text-center mb-8 sm:mb-12">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 px-2">
           Real-Time Financial Data Platform
         </h1>
-        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4">
           Stay ahead of the markets with live data on currencies, cryptocurrencies, 
           stock market capitalization, and breaking financial news.
         </p>
       </div>
 
       {/* Market Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
         <DataCard
           title="Top Currency Gainer"
           value={`${topCurrency?.symbol}${topCurrency?.rate.toFixed(4)}`}
           changePercent={topCurrency?.changePercent}
           subtitle={topCurrency?.name}
-          icon={<DollarSign className="h-5 w-5" />}
+          icon={<DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />}
         />
         
         <DataCard
@@ -62,7 +68,7 @@ const Home: React.FC = () => {
           value={`$${topCrypto?.price.toLocaleString()}`}
           changePercent={topCrypto?.changePercent24h}
           subtitle={topCrypto?.name}
-          icon={<Bitcoin className="h-5 w-5" />}
+          icon={<Bitcoin className="h-4 w-4 sm:h-5 sm:w-5" />}
         />
         
         <DataCard
@@ -70,62 +76,68 @@ const Home: React.FC = () => {
           value={`$${topStock?.price.toFixed(2)}`}
           changePercent={topStock?.changePercent}
           subtitle={topStock?.name}
-          icon={<Building2 className="h-5 w-5" />}
+          icon={<Building2 className="h-4 w-4 sm:h-5 sm:w-5" />}
         />
         
         <DataCard
           title="Total Market Cap"
-          value={`$${(marketSummary?.totalMarketCap || 0) / 1e12}T`}
+          value={formatMarketCap(marketSummary?.totalMarketCap || 0)}
           changePercent={marketSummary?.marketCapChange}
           subtitle="Global Markets"
-          icon={<TrendingUp className="h-5 w-5" />}
+          icon={<TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />}
         />
       </div>
 
       {/* Quick Access Sections */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
         {/* Market Highlights */}
-        <div className="bg-slate-800 rounded-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-white">Market Highlights</h2>
-            <TrendingUp className="h-6 w-6 text-blue-400" />
+        <div className="bg-slate-800 rounded-lg p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-white">Market Highlights</h2>
+            <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400 flex-shrink-0" />
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-              <div>
-                <div className="font-medium text-white">{topCurrency?.name}</div>
-                <div className="text-sm text-gray-400">Currency</div>
+              <div className="min-w-0 flex-1">
+                <div className="font-medium text-white truncate">{topCurrency?.name}</div>
+                <div className="text-xs sm:text-sm text-gray-400">Currency</div>
               </div>
-              <div className="text-right">
-                <div className="font-bold text-white">{topCurrency?.symbol}{topCurrency?.rate.toFixed(4)}</div>
-                <div className={`text-sm ${topCurrency && topCurrency.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+              <div className="text-right flex-shrink-0 ml-3">
+                <div className="font-bold text-white text-sm sm:text-base">
+                  {topCurrency?.symbol}{topCurrency?.rate.toFixed(4)}
+                </div>
+                <div className={`text-xs sm:text-sm ${topCurrency && topCurrency.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                   {topCurrency?.changePercent.toFixed(2)}%
                 </div>
               </div>
             </div>
             
             <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-              <div>
-                <div className="font-medium text-white">{topCrypto?.name}</div>
-                <div className="text-sm text-gray-400">Cryptocurrency</div>
+              <div className="min-w-0 flex-1">
+                <div className="font-medium text-white truncate">{topCrypto?.name}</div>
+                <div className="text-xs sm:text-sm text-gray-400">Cryptocurrency</div>
               </div>
-              <div className="text-right">
-                <div className="font-bold text-white">${topCrypto?.price.toLocaleString()}</div>
-                <div className={`text-sm ${topCrypto && topCrypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+              <div className="text-right flex-shrink-0 ml-3">
+                <div className="font-bold text-white text-sm sm:text-base">
+                  ${topCrypto?.price.toLocaleString()}
+                </div>
+                <div className={`text-xs sm:text-sm ${topCrypto && topCrypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                   {topCrypto?.changePercent24h.toFixed(2)}%
                 </div>
               </div>
             </div>
             
             <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-              <div>
-                <div className="font-medium text-white">{topStock?.name}</div>
-                <div className="text-sm text-gray-400">Stock</div>
+              <div className="min-w-0 flex-1">
+                <div className="font-medium text-white truncate">{topStock?.name}</div>
+                <div className="text-xs sm:text-sm text-gray-400">Stock</div>
               </div>
-              <div className="text-right">
-                <div className="font-bold text-white">${topStock?.price.toFixed(2)}</div>
-                <div className={`text-sm ${topStock && topStock.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+              <div className="text-right flex-shrink-0 ml-3">
+                <div className="font-bold text-white text-sm sm:text-base">
+                  ${topStock?.price.toFixed(2)}
+                </div>
+                <div className={`text-xs sm:text-sm ${topStock && topStock.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                   {topStock?.changePercent.toFixed(2)}%
                 </div>
               </div>
@@ -134,23 +146,23 @@ const Home: React.FC = () => {
         </div>
 
         {/* Breaking News */}
-        <div className="bg-slate-800 rounded-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-white">Breaking News</h2>
-            <Newspaper className="h-6 w-6 text-blue-400" />
+        <div className="bg-slate-800 rounded-lg p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-white">Breaking News</h2>
+            <Newspaper className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400 flex-shrink-0" />
           </div>
           
           <div className="space-y-4">
             {news.slice(0, 3).map((article) => (
               <div key={article.id} className="border-b border-slate-700 last:border-b-0 pb-4 last:pb-0">
-                <h3 className="font-medium text-white mb-2 line-clamp-2">
+                <h3 className="font-medium text-white mb-2 line-clamp-2 text-sm sm:text-base leading-tight">
                   {article.title}
                 </h3>
-                <div className="flex items-center justify-between text-sm text-gray-400">
-                  <span>{article.source}</span>
-                  <div className="flex items-center space-x-1">
+                <div className="flex items-center justify-between text-xs sm:text-sm text-gray-400">
+                  <span className="truncate flex-1">{article.source}</span>
+                  <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                     <Clock className="h-3 w-3" />
-                    <span>{new Date(article.publishedAt).toLocaleTimeString()}</span>
+                    <span>{new Date(article.publishedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 </div>
               </div>
@@ -168,41 +180,41 @@ const Home: React.FC = () => {
       </div>
 
       {/* Quick Navigation */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <Link 
           to="/currencies" 
-          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-6 transition-colors group"
+          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-4 sm:p-6 transition-colors group"
         >
-          <DollarSign className="h-8 w-8 text-blue-400 mb-4 group-hover:text-blue-300" />
-          <h3 className="text-lg font-semibold text-white mb-2">Currency Rates</h3>
-          <p className="text-gray-400 text-sm">Real-time exchange rates for major global currencies</p>
+          <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mb-3 sm:mb-4 group-hover:text-blue-300" />
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Currency Rates</h3>
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">Real-time exchange rates for major global currencies</p>
         </Link>
         
         <Link 
           to="/crypto" 
-          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-6 transition-colors group"
+          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-4 sm:p-6 transition-colors group"
         >
-          <Bitcoin className="h-8 w-8 text-blue-400 mb-4 group-hover:text-blue-300" />
-          <h3 className="text-lg font-semibold text-white mb-2">Cryptocurrency</h3>
-          <p className="text-gray-400 text-sm">Live prices and market data for top cryptocurrencies</p>
+          <Bitcoin className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mb-3 sm:mb-4 group-hover:text-blue-300" />
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Cryptocurrency</h3>
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">Live prices and market data for top cryptocurrencies</p>
         </Link>
         
         <Link 
           to="/market-cap" 
-          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-6 transition-colors group"
+          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-4 sm:p-6 transition-colors group"
         >
-          <Building2 className="h-8 w-8 text-blue-400 mb-4 group-hover:text-blue-300" />
-          <h3 className="text-lg font-semibold text-white mb-2">Market Cap</h3>
-          <p className="text-gray-400 text-sm">Top rising and falling companies by market capitalization</p>
+          <Building2 className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mb-3 sm:mb-4 group-hover:text-blue-300" />
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Market Cap</h3>
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">Top rising and falling companies by market capitalization</p>
         </Link>
         
         <Link 
           to="/news" 
-          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-6 transition-colors group"
+          className="bg-slate-800 hover:bg-slate-700 rounded-lg p-4 sm:p-6 transition-colors group"
         >
-          <Newspaper className="h-8 w-8 text-blue-400 mb-4 group-hover:text-blue-300" />
-          <h3 className="text-lg font-semibold text-white mb-2">Financial News</h3>
-          <p className="text-gray-400 text-sm">Latest breaking news from the financial world</p>
+          <Newspaper className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mb-3 sm:mb-4 group-hover:text-blue-300" />
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Financial News</h3>
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">Latest breaking news from the financial world</p>
         </Link>
       </div>
     </div>

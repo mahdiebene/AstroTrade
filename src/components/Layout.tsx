@@ -43,15 +43,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link to="/" onClick={handleLinkClick} className="flex items-center space-x-3">
+              <Link to="/" onClick={handleLinkClick} className="flex items-center space-x-2 sm:space-x-3">
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-white" />
+                  <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                 </div>
-                <div>
-                  <span className="text-xl font-bold text-white">Astro-Trade</span>
+                <div className="min-w-0">
+                  <span className="text-lg sm:text-xl font-bold text-white truncate">Astro-Trade</span>
                   <div className="flex items-center space-x-1">
-                    <Star className="h-3 w-3 text-yellow-400" />
-                    <span className="text-xs text-gray-400">by Mahdi</span>
+                    <Star className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-400" />
+                    <span className="text-xs text-gray-400 truncate">by Mahdi</span>
                   </div>
                 </div>
               </Link>
@@ -94,7 +94,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-slate-800 border-t border-slate-700">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className="px-2 pt-2 pb-3 space-y-1 max-h-96 overflow-y-auto">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -124,28 +124,28 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-800 border-t border-slate-700 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <footer className="bg-slate-800 border-t border-slate-700 mt-8 sm:mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8">
             <div className="md:col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
+              <div className="flex items-center space-x-2 sm:space-x-3 mb-4">
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                  <TrendingUp className="h-5 w-5 text-white" />
+                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 </div>
-                <div>
-                  <span className="text-lg font-bold text-white">Astro-Trade</span>
+                <div className="min-w-0">
+                  <span className="text-base sm:text-lg font-bold text-white">Astro-Trade</span>
                   <div className="flex items-center space-x-1">
-                    <Star className="h-3 w-3 text-yellow-400" />
+                    <Star className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-400" />
                     <span className="text-xs text-gray-400">Founded by Mahdi</span>
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm mb-4">
+              <p className="text-gray-400 text-sm mb-4 leading-relaxed">
                 Real-time financial data platform providing comprehensive market insights, 
                 currency exchange rates, cryptocurrency prices, and breaking financial news. 
                 Based in Mohammadpur, Dhaka, Bangladesh.
               </p>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-500 space-y-1">
                 <p>📍 Mohammadpur, Dhaka, Bangladesh</p>
                 <p>📧 support@astrotrade.com</p>
                 <p>📞 +880 1317 284650</p>
@@ -154,23 +154,23 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <div>
               <h3 className="text-white font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2">
-                <li><Link to="/currencies" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">Currency Rates</Link></li>
-                <li><Link to="/crypto" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">Cryptocurrency</Link></li>
-                <li><Link to="/market-cap" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">Market Cap</Link></li>
-                <li><Link to="/news" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">Financial News</Link></li>
+                <li><Link to="/currencies" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">Currency Rates</Link></li>
+                <li><Link to="/crypto" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">Cryptocurrency</Link></li>
+                <li><Link to="/market-cap" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">Market Cap</Link></li>
+                <li><Link to="/news" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">Financial News</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="text-white font-semibold mb-4">Information</h3>
               <ul className="space-y-2">
-                <li><Link to="/about" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">About Astro-Trade</Link></li>
-                <li><Link to="/contact" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">Contact Us</Link></li>
-                <li><Link to="/privacy-policy" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">Privacy Policy</Link></li>
-                <li><Link to="/terms-of-service" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm">Terms of Service</Link></li>
+                <li><Link to="/about" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">About Astro-Trade</Link></li>
+                <li><Link to="/contact" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">Contact Us</Link></li>
+                <li><Link to="/privacy-policy" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms-of-service" onClick={handleLinkClick} className="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-slate-700 mt-8 pt-8 text-center">
+          <div className="border-t border-slate-700 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center">
             <p className="text-gray-400 text-sm">
               © 2024 Astro-Trade. All rights reserved. Founded by Mahdi in Dhaka, Bangladesh.
             </p>
