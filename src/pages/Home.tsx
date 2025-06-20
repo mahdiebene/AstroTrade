@@ -40,6 +40,34 @@ const Home: React.FC = () => {
     return `$${(value / 1e6).toFixed(1)}M`;
   };
 
+  // Format currency value for mobile
+  const formatCurrencyValue = (currency: any) => {
+    if (!currency) return 'N/A';
+    const rate = currency.rate;
+    if (rate < 0.01) {
+      return `${currency.symbol}${rate.toFixed(6)}`;
+    } else if (rate < 1) {
+      return `${currency.symbol}${rate.toFixed(4)}`;
+    } else if (rate > 1000) {
+      return `${currency.symbol}${(rate / 1000).toFixed(1)}K`;
+    } else {
+      return `${currency.symbol}${rate.toFixed(2)}`;
+    }
+  };
+
+  // Format crypto value for mobile
+  const formatCryptoValue = (crypto: any) => {
+    if (!crypto) return 'N/A';
+    const price = crypto.price;
+    if (price >= 1000) {
+      return `$${(price / 1000).toFixed(1)}K`;
+    } else if (price < 0.01) {
+      return `$${price.toFixed(6)}`;
+    } else {
+      return `$${price.toLocaleString()}`;
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Hero Section */}
@@ -53,26 +81,26 @@ const Home: React.FC = () => {
         </p>
       </div>
 
-      {/* Market Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
+      {/* Market Summary Cards - Mobile Optimized */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-8 sm:mb-12">
         <DataCard
-          title="Top Currency Gainer"
-          value={`${topCurrency?.symbol}${topCurrency?.rate.toFixed(4)}`}
+          title="Top Currency"
+          value={formatCurrencyValue(topCurrency)}
           changePercent={topCurrency?.changePercent}
           subtitle={topCurrency?.name}
           icon={<DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />}
         />
         
         <DataCard
-          title="Top Crypto Performer"
-          value={`$${topCrypto?.price.toLocaleString()}`}
+          title="Top Crypto"
+          value={formatCryptoValue(topCrypto)}
           changePercent={topCrypto?.changePercent24h}
           subtitle={topCrypto?.name}
           icon={<Bitcoin className="h-4 w-4 sm:h-5 sm:w-5" />}
         />
         
         <DataCard
-          title="Top Stock Gainer"
+          title="Top Stock"
           value={`$${topStock?.price.toFixed(2)}`}
           changePercent={topStock?.changePercent}
           subtitle={topStock?.name}
@@ -80,7 +108,7 @@ const Home: React.FC = () => {
         />
         
         <DataCard
-          title="Total Market Cap"
+          title="Market Cap"
           value={formatMarketCap(marketSummary?.totalMarketCap || 0)}
           changePercent={marketSummary?.marketCapChange}
           subtitle="Global Markets"
@@ -100,12 +128,12 @@ const Home: React.FC = () => {
           <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
               <div className="min-w-0 flex-1">
-                <div className="font-medium text-white truncate">{topCurrency?.name}</div>
+                <div className="font-medium text-white truncate text-sm sm:text-base">{topCurrency?.name}</div>
                 <div className="text-xs sm:text-sm text-gray-400">Currency</div>
               </div>
               <div className="text-right flex-shrink-0 ml-3">
-                <div className="font-bold text-white text-sm sm:text-base">
-                  {topCurrency?.symbol}{topCurrency?.rate.toFixed(4)}
+                <div className="font-bold text-white text-xs sm:text-sm lg:text-base">
+                  {formatCurrencyValue(topCurrency)}
                 </div>
                 <div className={`text-xs sm:text-sm ${topCurrency && topCurrency.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                   {topCurrency?.changePercent.toFixed(2)}%
@@ -115,12 +143,12 @@ const Home: React.FC = () => {
             
             <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
               <div className="min-w-0 flex-1">
-                <div className="font-medium text-white truncate">{topCrypto?.name}</div>
+                <div className="font-medium text-white truncate text-sm sm:text-base">{topCrypto?.name}</div>
                 <div className="text-xs sm:text-sm text-gray-400">Cryptocurrency</div>
               </div>
               <div className="text-right flex-shrink-0 ml-3">
-                <div className="font-bold text-white text-sm sm:text-base">
-                  ${topCrypto?.price.toLocaleString()}
+                <div className="font-bold text-white text-xs sm:text-sm lg:text-base">
+                  {formatCryptoValue(topCrypto)}
                 </div>
                 <div className={`text-xs sm:text-sm ${topCrypto && topCrypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                   {topCrypto?.changePercent24h.toFixed(2)}%
@@ -130,11 +158,11 @@ const Home: React.FC = () => {
             
             <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
               <div className="min-w-0 flex-1">
-                <div className="font-medium text-white truncate">{topStock?.name}</div>
+                <div className="font-medium text-white truncate text-sm sm:text-base">{topStock?.name}</div>
                 <div className="text-xs sm:text-sm text-gray-400">Stock</div>
               </div>
               <div className="text-right flex-shrink-0 ml-3">
-                <div className="font-bold text-white text-sm sm:text-base">
+                <div className="font-bold text-white text-xs sm:text-sm lg:text-base">
                   ${topStock?.price.toFixed(2)}
                 </div>
                 <div className={`text-xs sm:text-sm ${topStock && topStock.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>

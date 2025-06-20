@@ -65,6 +65,19 @@ const Crypto: React.FC = () => {
     return `$${num.toLocaleString()}`;
   };
 
+  // Format price for mobile display
+  const formatPrice = (price: number) => {
+    if (price >= 1000) {
+      return `$${(price / 1000).toFixed(1)}K`;
+    } else if (price < 0.01) {
+      return `$${price.toFixed(6)}`;
+    } else if (price < 1) {
+      return `$${price.toFixed(4)}`;
+    } else {
+      return `$${price.toFixed(2)}`;
+    }
+  };
+
   const totalMarketCap = cryptocurrencies.reduce((sum, crypto) => sum + crypto.marketCap, 0);
 
   // Columns for ExploreMore component
@@ -94,7 +107,7 @@ const Crypto: React.FC = () => {
       label: 'Price',
       render: (crypto: any) => (
         <div className="text-sm font-medium text-white">
-          ${crypto.price.toLocaleString()}
+          {formatPrice(crypto.price)}
         </div>
       ),
     },
@@ -273,7 +286,7 @@ const Crypto: React.FC = () => {
                   </td>
                   <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-white">
-                      ${crypto.price.toLocaleString()}
+                      {formatPrice(crypto.price)}
                     </div>
                   </td>
                   <td className="px-3 sm:px-6 py-4 whitespace-nowrap">

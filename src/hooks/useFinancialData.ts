@@ -68,11 +68,12 @@ export const useFinancialData = () => {
           }
         });
 
-        // Generate market summary from available data
+        // Generate market summary from available data with real-time sync
         const currentCurrencies = currencies.length > 0 ? currencies : fallbackData.currencies;
         const currentCryptos = cryptocurrencies.length > 0 ? cryptocurrencies : fallbackData.cryptocurrencies;
         const currentStocks = companies.length > 0 ? companies : fallbackData.companies;
 
+        // Update market summary with current timestamp
         const topCurrencyGainer = currentCurrencies.sort((a, b) => b.changePercent - a.changePercent)[0];
         const topCryptoGainer = currentCryptos.sort((a, b) => b.changePercent24h - a.changePercent24h)[0];
         const topStockGainer = currentStocks.sort((a, b) => b.changePercent - a.changePercent)[0];
@@ -106,8 +107,8 @@ export const useFinancialData = () => {
         });
 
       } catch (timeoutError) {
-        console.log('API calls timed out, using fallback data');
-        // Fallback data is already set, so we just continue
+        console.log('API calls timed out, using fallback data with real-time sync');
+        // Fallback data is already set with current timestamps, so we just continue
       }
 
     } catch (err) {
@@ -124,8 +125,8 @@ export const useFinancialData = () => {
   useEffect(() => {
     fetchData();
     
-    // Set up auto-refresh every 5 minutes for real-time updates (increased interval for mobile)
-    const interval = setInterval(fetchData, 300000); // 5 minutes
+    // Set up auto-refresh every 2 minutes for real-time updates (more frequent for better sync)
+    const interval = setInterval(fetchData, 120000); // 2 minutes
     
     return () => clearInterval(interval);
   }, []);
