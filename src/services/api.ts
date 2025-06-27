@@ -351,18 +351,44 @@ class ApiService {
   }
 
   async fetchCryptocurrencies(): Promise<ApiResponse<any[]>> {
+    // Try primary CoinGecko API first
     try {
-      // Try primary CoinGecko API first
-      let response = await this.fetchWithTimeout(API_ENDPOINTS.crypto);
+      const response = await this.fetchWithTimeout(API_ENDPOINTS.crypto);
       
-      if (!response.ok) {
-        // Try backup CoinLore API
-        response = await this.fetchWithTimeout(API_ENDPOINTS.cryptoBackup);
+      if (response.ok) {
+        // Handle CoinGecko format
+        const data: CryptoApiItem[] = await response.json();
         
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
+        const cryptocurrencies = data.slice(0, 50).map(crypto => ({
+          id: crypto.id,
+          name: crypto.name,
+          symbol: crypto.symbol.toUpperCase(),
+          price: crypto.current_price,
+          marketCap: crypto.market_cap,
+          change24h: crypto.price_change_24h,
+          changePercent24h: crypto.price_change_percentage_24h,
+          volume24h: crypto.total_volume,
+          rank: crypto.market_cap_rank,
+          // Additional data from CoinGecko
+          circulatingSupply: crypto.circulating_supply,
+          totalSupply: crypto.total_supply,
+          maxSupply: crypto.max_supply,
+          ath: crypto.ath,
+          atl: crypto.atl,
+          lastUpdated: new Date().toISOString(),
+        }));
+
+        return { data: cryptocurrencies };
+      }
+    } catch (error) {
+      console.warn('CoinGecko API failed, trying backup:', error);
+    }
+
+    // Try backup CoinLore API
+    try {
+      const response = await this.fetchWithTimeout(API_ENDPOINTS.cryptoBackup);
+      
+      if (response.ok) {
         // Handle CoinLore format
         const coinLoreData = await response.json();
         const cryptocurrencies = coinLoreData.data?.slice(0, 50).map((crypto: CoinLoreItem) => ({
@@ -380,34 +406,13 @@ class ApiService {
 
         return { data: cryptocurrencies };
       }
-      
-      // Handle CoinGecko format
-      const data: CryptoApiItem[] = await response.json();
-      
-      const cryptocurrencies = data.slice(0, 50).map(crypto => ({
-        id: crypto.id,
-        name: crypto.name,
-        symbol: crypto.symbol.toUpperCase(),
-        price: crypto.current_price,
-        marketCap: crypto.market_cap,
-        change24h: crypto.price_change_24h,
-        changePercent24h: crypto.price_change_percentage_24h,
-        volume24h: crypto.total_volume,
-        rank: crypto.market_cap_rank,
-        // Additional data from CoinGecko
-        circulatingSupply: crypto.circulating_supply,
-        totalSupply: crypto.total_supply,
-        maxSupply: crypto.max_supply,
-        ath: crypto.ath,
-        atl: crypto.atl,
-        lastUpdated: new Date().toISOString(),
-      }));
-
-      return { data: cryptocurrencies };
     } catch (error) {
-      console.error('Error fetching cryptocurrencies:', error);
-      throw error;
+      console.warn('CoinLore API failed, using fallback data:', error);
     }
+
+    // If all APIs fail, use fallback data
+    const fallbackData = this.getFallbackData();
+    return { data: fallbackData.cryptocurrencies };
   }
 
   async fetchCurrencies(): Promise<ApiResponse<any[]>> {
